@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AR Kamera Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobil AR Test</title>
 
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.min.js"></script>
@@ -17,49 +17,74 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0);
+            background: black;
         }
 
-        video,
-        canvas,
         a-scene {
+            width: 100vw !important;
+            height: 100vh !important;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            overflow: hidden;
+        }
+
+        video {
             object-fit: cover !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            top: 0;
+            left: 0;
+            position: fixed;
+            z-index: -1;
+            transform: scaleX(-1);
+            /* Selfie kamerada aynalama hatasını düzeltir */
         }
     </style>
 </head>
 
 <body>
     <a-scene vr-mode-ui="enabled: false" embedded renderer="logarithmicDepthBuffer: true;"
-        arjs="trackingMethod: best; sourceType: webcam; sourceWidth:1280; sourceHeight:720; displayWidth:1280; displayHeight:720;"
-        style="width:100vw; height:100vh;">
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
         <a-marker type="pattern" url="./markers/hiro.patt">
             <a-entity gltf-model="./models/model1.glb" scale="5 5 5"></a-entity>
         </a-marker>
+
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        // AR.js başlamadan kendi video çözünürlüğünü belirle
-        const constraints = {
-            video: {
-                facingMode: { ideal: "environment" },
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-            }
-        };
+        // Kamera izinlerini baştan al
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" } }
+        }).then(stream => {
+            console.log("Kamera erişimi başarılı.");
+        }).catch(err => {
+            alert("Kamera açılamadı: " + err.message);
+        });
 
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(stream => {
-                console.log("Kamera erişimi başarılı:", stream);
-                const video = document.querySelector("video");
-                if (video) video.srcObject = stream;
-            })
-            .catch(err => console.error("Kamera hatası:", err.name, err.message));
+        // --- Mobilde zoom sorunu çözümü ---
+        function resizeVideo() {
+            const video = document.querySelector('video');
+            if (!video) return;
+            video.style.width = '100vw';
+            video.style.height = '100vh';
+            video.style.objectFit = 'cover';
+            video.style.position = 'fixed';
+            video.style.top = '0';
+            video.style.left = '0';
+            console.log('Video yeniden boyutlandırıldı');
+        }
+
+        // AR.js video elemanı oluşunca düzenle
+        const observer = new MutationObserver(() => {
+            const video = document.querySelector('video');
+            if (video && video.videoWidth > 0) {
+                resizeVideo();
+                observer.disconnect();
+            }
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
     </script>
 </body>
 
