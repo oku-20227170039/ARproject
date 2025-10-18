@@ -4,9 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Marker AR Test</title>
+    <title>AR Kamera Test</title>
 
-    <!-- A-Frame ve AR.js -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.min.js"></script>
 
@@ -18,7 +17,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0);
+            background: black;
         }
 
         video,
@@ -35,41 +34,32 @@
 </head>
 
 <body>
-    <a-scene embedded vr-mode-ui="enabled: false" renderer="logarithmicDepthBuffer: true;"
-        arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 1280; displayHeight: 720;"
+    <a-scene vr-mode-ui="enabled: false" embedded renderer="logarithmicDepthBuffer: true;"
+        arjs="trackingMethod: best; sourceType: webcam; sourceWidth:1280; sourceHeight:720; displayWidth:1280; displayHeight:720;"
         style="width:100vw; height:100vh;">
-
-        <!-- Marker tanımı -->
-        <a-nft type="nft" url="./markers/marker" smooth="true" smoothCount="10" smoothTolerance="0.01"
-            smoothThreshold="5">
-            <!-- Model -->
-            <a-entity gltf-model="./models/model1.glb" scale="5 5 5" position="0 0 0" rotation="0 0 0"></a-entity>
-        </a-nft>
-
+        <a-marker type="pattern" url="./markers/hiro.patt">
+            <a-entity gltf-model="./models/model1.glb" scale="5 5 5"></a-entity>
+        </a-marker>
         <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-        // Kamera erişimini manuel kontrol edelim
-        navigator.mediaDevices.getUserMedia({
+        // AR.js başlamadan kendi video çözünürlüğünü belirle
+        const constraints = {
             video: {
                 facingMode: { ideal: "environment" },
-                width: { ideal: window.innerWidth },
-                height: { ideal: window.innerHeight }
+                width: { ideal: 1280 },
+                height: { ideal: 720 }
             }
-        })
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints)
             .then(stream => {
+                console.log("Kamera erişimi başarılı:", stream);
                 const video = document.querySelector("video");
-                video.srcObject = stream;
+                if (video) video.srcObject = stream;
             })
             .catch(err => console.error("Kamera hatası:", err.name, err.message));
-
-
-
-        // Olası AR.js hatalarını dinle
-        window.addEventListener('error', (e) => {
-            console.error("❌ Sayfa hatası:", e.message);
-        });
     </script>
 </body>
 
