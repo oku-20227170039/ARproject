@@ -26,8 +26,12 @@
 </head>
 
 <body>
-    <a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true;"
-        arjs="sourceType: webcam; debugUIEnabled: false;">
+    <div id="durum"
+        style="position: absolute; top: 10px; left: 10px; z-index: 10; color: white; background: rgba(0,0,0,0.5); padding: 5px;">
+        Yükleniyor...
+    </div>
+
+    <a-scene embedded ...>
         <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
 </body>
