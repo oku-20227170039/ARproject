@@ -51,14 +51,17 @@
 
     <script>
         // Kamera erişimini manuel kontrol edelim
-        navigator.mediaDevices.getUserMedia({ video: true })
+        navigator.mediaDevices.getUserMedia({
+            video: { facingMode: { ideal: "environment" } }
+        })
             .then(stream => {
-                console.log("🎥 Kamera erişimi başarıyla alındı.");
+                const video = document.querySelector("video");
+                video.srcObject = stream;
             })
             .catch(err => {
-                console.error("🚫 Kamera izni alınamadı:", err);
-                alert("Kamera izni verilmedi veya tarayıcı erişimi engelledi.");
+                console.error("Kamera hatası:", err.name, err.message);
             });
+
 
         // Olası AR.js hatalarını dinle
         window.addEventListener('error', (e) => {
