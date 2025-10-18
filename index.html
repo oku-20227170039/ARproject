@@ -2,10 +2,11 @@
 <html lang="tr">
 
 <head>
-    <meta charset="UTF-R">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Üniversite AR Tanıtımı</title>
 
+    <!-- A-Frame ve AR.js -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.0/aframe/build/aframe-ar.js"></script>
 
@@ -18,30 +19,26 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
+            background: black;
         }
 
-        /* Kullanıcıya geri bildirim vermek için durum paneli */
-        #status {
-            position: absolute;
-            z-index: 10;
-            top: 10px;
-            left: 10px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px;
-            font-family: monospace;
-            border-radius: 5px;
-            font-size: 14px;
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
         }
     </style>
 </head>
 
 <body>
-    <div id="status">Uygulama yükleniyor...</div>
+    <video id="cameraFeed" autoplay playsinline muted></video>
 
     <a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true;"
-        arjs="sourceType: webcam; debugUIEnabled: true;">
-
+        arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;">
         <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
 </body>
