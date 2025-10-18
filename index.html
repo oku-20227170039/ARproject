@@ -6,47 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Üniversite AR Tanıtımı</title>
 
-    <!-- A-Frame ve AR.js kütüphaneleri -->
+    <!-- A-Frame ve AR.js -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ar.js@3.4.0/aframe/build/aframe-ar.js"></script>
-
-    <!-- Ana script -->
     <script src="./scripts/main.js" defer></script>
 
     <style>
         body {
             margin: 0;
             overflow: hidden;
+            font-family: sans-serif;
         }
 
-        #loading {
+        #permissions {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            font-family: sans-serif;
+            text-align: center;
             z-index: 9999;
+        }
+
+        #permissions button {
+            background: #2a9d8f;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
         }
     </style>
 </head>
 
 <body>
-    <div id="loading">📍 Konum alınıyor, lütfen izin verin...</div>
+    <!-- Kullanıcıdan izin isteme ekranı -->
+    <div id="permissions">
+        <h2>📍 AR Deneyimine Başlamak İçin</h2>
+        <p>Lütfen kamera, konum ve yönlendirme izinlerini verin.</p>
+        <button id="startAR">İzin Ver ve Başlat</button>
+    </div>
 
+    <!-- AR sahnesi -->
     <a-scene vr-mode-ui="enabled: false" embedded renderer="antialias: true; alpha: true;"
         arjs="sourceType: webcam; debugUIEnabled: false;">
-
-        <!-- Kamera, GPS ve yön okuma -->
         <a-camera gps-camera rotation-reader></a-camera>
-
-        <!-- Modeller JS ile eklenecek -->
-
     </a-scene>
 </body>
 
