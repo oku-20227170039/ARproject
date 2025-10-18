@@ -4,34 +4,58 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Üniversite AR Tanıtım (Marker Tabanlı)</title>
+    <title>Marker AR Test</title>
 
+    <!-- A-Frame ve AR.js -->
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://cdn.rawgit.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.min.js"></script>
 
     <style>
-        body,
-        html {
+        html,
+        body {
             margin: 0;
+            padding: 0;
             overflow: hidden;
+            width: 100%;
             height: 100%;
-            background-color: black;
+            background: black;
+        }
+
+        video {
+            object-fit: cover !important;
         }
     </style>
 </head>
 
 <body>
     <a-scene embedded vr-mode-ui="enabled: false" renderer="logarithmicDepthBuffer: true;"
-        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;">
-        <!-- marker tanımı -->
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;">
+        <!-- Marker tanımı -->
         <a-nft type="nft" url="./markers/marker" smooth="true" smoothCount="10" smoothTolerance="0.01"
             smoothThreshold="5">
-            <!-- model -->
-            <a-entity gltf-model="./models/model1.glb" scale="5 5 5" rotation="0 0 0" position="0 0 0"></a-entity>
+            <!-- Model -->
+            <a-entity gltf-model="./models/model1.glb" scale="5 5 5" position="0 0 0" rotation="0 0 0"></a-entity>
         </a-nft>
 
         <a-entity camera></a-entity>
     </a-scene>
+
+    <script>
+        // Kamera erişimini manuel kontrol edelim
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                console.log("🎥 Kamera erişimi başarıyla alındı.");
+            })
+            .catch(err => {
+                console.error("🚫 Kamera izni alınamadı:", err);
+                alert("Kamera izni verilmedi veya tarayıcı erişimi engelledi.");
+            });
+
+        // Olası AR.js hatalarını dinle
+        window.addEventListener('error', (e) => {
+            console.error("❌ Sayfa hatası:", e.message);
+        });
+    </script>
 </body>
 
 </html>
