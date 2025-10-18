@@ -52,15 +52,18 @@
     <script>
         // Kamera erişimini manuel kontrol edelim
         navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: "environment" } }
+            video: {
+                facingMode: { ideal: "environment" },
+                width: { ideal: window.innerWidth },
+                height: { ideal: window.innerHeight }
+            }
         })
             .then(stream => {
                 const video = document.querySelector("video");
                 video.srcObject = stream;
             })
-            .catch(err => {
-                console.error("Kamera hatası:", err.name, err.message);
-            });
+            .catch(err => console.error("Kamera hatası:", err.name, err.message));
+
 
 
         // Olası AR.js hatalarını dinle
