@@ -2,7 +2,7 @@
 <html lang="tr">
 
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-R">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Üniversite AR Tanıtımı</title>
 
@@ -18,20 +18,30 @@
             padding: 0;
             height: 100%;
             overflow: hidden;
-            background: black;
         }
 
-        /* <video> elementi kaldırıldığı için ilgili CSS de kaldırıldı */
+        /* Kullanıcıya geri bildirim vermek için durum paneli */
+        #status {
+            position: absolute;
+            z-index: 10;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            font-family: monospace;
+            border-radius: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 
 <body>
-    <div id="durum"
-        style="position: absolute; top: 10px; left: 10px; z-index: 10; color: white; background: rgba(0,0,0,0.5); padding: 5px;">
-        Yükleniyor...
-    </div>
+    <div id="status">Uygulama yükleniyor...</div>
 
-    <a-scene embedded ...>
+    <a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true;"
+        arjs="sourceType: webcam; debugUIEnabled: true;">
+
         <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
 </body>
