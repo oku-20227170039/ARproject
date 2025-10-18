@@ -18,19 +18,17 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: rgba(0, 0, 0, 0);
+            background: black;
         }
 
+        video,
+        canvas,
         a-scene {
-            width: 100%;
-            height: 100%;
             position: fixed;
             top: 0;
             left: 0;
-        }
-
-
-        video {
+            width: 100vw;
+            height: 100vh;
             object-fit: cover !important;
         }
     </style>
@@ -38,7 +36,9 @@
 
 <body>
     <a-scene embedded vr-mode-ui="enabled: false" renderer="logarithmicDepthBuffer: true;"
-        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: true;">
+        arjs="sourceType: webcam; sourceWidth: 1280; sourceHeight: 720; displayWidth: 1280; displayHeight: 720;"
+        style="width:100vw; height:100vh;">
+
         <!-- Marker tanımı -->
         <a-nft type="nft" url="./markers/marker" smooth="true" smoothCount="10" smoothTolerance="0.01"
             smoothThreshold="5">
