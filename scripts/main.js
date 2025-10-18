@@ -1,40 +1,37 @@
-window.onload = async () => {
-    const video = document.getElementById("cameraFeed");
-
-    // 1️⃣ Kamera izni
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "environment" },
-            audio: false
+window.onload = () => {
+    // 1️⃣ Kamera izni iste
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+        .then((stream) => {
+            console.log("📸 Kamera izni verildi");
+            startGeolocation();
+        })
+        .catch((err) => {
+            alert("Kamera izni verilmedi veya desteklenmiyor!");
+            console.error(err);
         });
-        video.srcObject = stream;
-    } catch (err) {
-        alert("Kamera izni verilmedi veya desteklenmiyor!");
-        console.error(err);
-        return;
-    }
 
-    // 2️⃣ Konum izni
-    if ("geolocation" in navigator) {
-        navigator.geolocation.getCurrentPosition(
-            (pos) => {
-                console.log("📍 Konum alındı:", pos.coords);
-                startAR();
-            },
-            (err) => {
-                alert("Konum izni reddedildi!");
-                console.error(err);
-            },
-            { enableHighAccuracy: true }
-        );
-    } else {
-        alert("Tarayıcı konum desteği sunmuyor!");
+    // 2️⃣ Konum izni iste
+    function startGeolocation() {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    console.log("📍 Konum alındı:", pos.coords);
+                    startAR();
+                },
+                (err) => {
+                    alert("Konum izni reddedildi!");
+                    console.error(err);
+                },
+                { enableHighAccuracy: true }
+            );
+        } else {
+            alert("Tarayıcı konum desteği sunmuyor!");
+        }
     }
 
     // 3️⃣ AR modelini sahneye ekle
     function startAR() {
         const scene = document.querySelector("a-scene");
-
         const model = {
             name: "model1",
             lat: 37.051526,

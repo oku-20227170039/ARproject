@@ -17,27 +17,16 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100%;
             overflow: hidden;
-            background: black;
-        }
-
-        video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
             height: 100%;
-            object-fit: cover;
-            z-index: -1;
+            background: black;
         }
     </style>
 </head>
 
 <body>
-    <video id="cameraFeed" autoplay playsinline muted></video>
-
-    <a-scene embedded vr-mode-ui="enabled: false" renderer="antialias: true; alpha: true;"
+    <!-- AR sahnesi -->
+    <a-scene vr-mode-ui="enabled: false" embedded renderer="antialias: true; alpha: true;"
         arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;">
         <a-camera gps-camera rotation-reader></a-camera>
     </a-scene>
