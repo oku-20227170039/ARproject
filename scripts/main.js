@@ -1,3 +1,42 @@
+window.onload = async () => {
+    const loading = document.getElementById("loading");
+
+    try {
+        // 1️⃣ Kamera izni
+        await navigator.mediaDevices.getUserMedia({ video: true });
+
+        // 2️⃣ Konum izni
+        await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 10000,
+            });
+        });
+
+        // 3️⃣ (iOS için) yön sensörü izni
+        if (
+            typeof DeviceOrientationEvent !== "undefined" &&
+            typeof DeviceOrientationEvent.requestPermission === "function"
+        ) {
+            // Bu satır sadece iOS için çalışır, kullanıcıdan dokunuş ister
+            try {
+                await DeviceOrientationEvent.requestPermission();
+            } catch (err) {
+                console.warn("Yön izni reddedildi veya gerekli değil:", err);
+            }
+        }
+
+        // İzinler alındı, sahneyi başlat
+        startARScene();
+        loading.style.opacity = "0";
+        setTimeout(() => (loading.style.display = "none"), 500);
+    } catch (err) {
+        loading.innerHTML = `<h2>❌ İzin alınamadı</h2><p>${err.message}</p>`;
+        console.error("İzin hatası:", err);
+    }
+};
+
+// 3D modeller
 const models = [
     {
         name: "model1",
@@ -8,40 +47,6 @@ const models = [
     },
 ];
 
-// Başlatma butonuna tıklanınca izinleri iste
-document.getElementById("startAR").addEventListener("click", async () => {
-    try {
-        // Kamera izni iste
-        await navigator.mediaDevices.getUserMedia({ video: true });
-
-        // Konum izni iste
-        await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject, {
-                enableHighAccuracy: true,
-                timeout: 10000,
-            });
-        });
-
-        // iOS / Safari için yön (device orientation) izni iste
-        if (
-            typeof DeviceOrientationEvent !== "undefined" &&
-            typeof DeviceOrientationEvent.requestPermission === "function"
-        ) {
-            const permission = await DeviceOrientationEvent.requestPermission();
-            if (permission !== "granted") throw new Error("Yön izni reddedildi");
-        }
-
-        // Tüm izinler alındıysa
-        document.getElementById("permissions").style.display = "none";
-        startARScene();
-
-    } catch (err) {
-        alert("Gerekli izinler alınamadı: " + err.message);
-        console.error(err);
-    }
-});
-
-// AR sahnesini başlat ve modelleri yükle
 function startARScene() {
     const scene = document.querySelector("a-scene");
 
@@ -51,7 +56,10 @@ function startARScene() {
 
         models.forEach((item) => {
             const entity = document.createElement("a-entity");
-            entity.setAttribute("gps-entity-place", `latitude: ${item.lat}; longitude: ${item.lon};`);
+            entity.setAttribute(
+                "gps-entity-place",
+                `latitude: ${item.lat}; longitude: ${item.lon};`
+            );
             entity.setAttribute("gltf-model", `url(${item.file})`);
             entity.setAttribute("scale", item.scale);
             entity.setAttribute("animation-mixer", "");
