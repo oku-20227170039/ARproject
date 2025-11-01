@@ -8,6 +8,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     const speedEl = document.getElementById("speed");
     const warnEl = document.getElementById("warning");
 
+    const startButton = document.getElementById("startAR");
+
+
+    startButton.addEventListener("click", async () => {
+        startButton.style.display = "none"; // butonu gizle
+
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' },
+                audio: false
+            });
+            video.srcObject = stream;
+            statusEl.textContent = "Kamera aktif";
+        } catch (err) {
+            alert("Kamera izni verilmedi!");
+            statusEl.textContent = "Kamera izni reddedildi";
+            return;
+        }
+
+        // Şimdi konum izni iste
+        navigator.geolocation.getCurrentPosition(
+            (pos) => {
+                console.log("Konum alındı");
+                // Buradan itibaren senin mevcut konum ve model kodun devam edebilir
+                startTracking(pos);
+            },
+            (err) => {
+                alert("Konum izni verilmedi veya alınamadı.");
+                console.error(err);
+            },
+            { enableHighAccuracy: true, timeout: 10000 }
+        );
+    });
+
+
     // Ayarlar (yüksek frekanslı güncelleme)
     const POLL_INTERVAL = 200;
     const MAX_ALLOWED_AGE = 500;
